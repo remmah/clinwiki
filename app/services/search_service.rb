@@ -95,7 +95,7 @@ class SearchService # rubocop:disable Metrics/ClassLength
     front_matter_keys
   ].freeze
 
-  NULL_VALUE_STRING = " Missing"
+  NULL_VALUE_STRING = "_Missing_"
 
   attr_reader :params
 
