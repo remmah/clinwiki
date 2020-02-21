@@ -159,7 +159,7 @@ class SearchService # rubocop:disable Metrics/ClassLength
           },
         )
 
-      body[:aggs][key][:aggs][key][:terms][:missing] = "Missing" unless key ==:average_rating
+      body[:aggs][key][:aggs][key][:terms][:missing] = "<Missing>" unless key ==:average_rating
 
       visibile_options = find_visibile_options(key, is_crowd_agg, current_site,url)
       visible_options_regex = one_of_regex(visibile_options)
@@ -279,7 +279,7 @@ class SearchService # rubocop:disable Metrics/ClassLength
 
     cleaned_filters.map do |filter|
       key_prefix = is_crowd_agg ? "fm_" : ""
-      filter[:values].map! { |value| value == "Missing" ? nil : value }
+      filter[:values].map! { |value| value == "<Missing>" ? nil : value }
       key = "#{key_prefix}#{filter[:field]}"
       { _or: filter[:values].map { |val| { key => val } } }
     end
