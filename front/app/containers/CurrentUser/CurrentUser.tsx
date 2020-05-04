@@ -24,6 +24,7 @@ const FRAGMENT = gql`
       briefTitle
       nctId
     }
+    pictureUrl
     contributions
   }
 `;
