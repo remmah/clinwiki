@@ -18,8 +18,10 @@ class User < ApplicationRecord
       user.first_name = payload["given_name"]
       user.last_name =  payload["family_name"]
       user.email = payload["email"]
-      user.picture_url = payload["picture"]
       user.password = Devise.friendly_token(8)
+    end
+    if !user.picture_url
+      user.picture_url = payload["picture"]
     end
     user.save
     user
