@@ -18,7 +18,7 @@ interface ProfileScoreBoardProps {
   totalReviews: any;
   totalTags: any;
   totalFavorites: any;
-  handleDisplayChange:any;
+  handleDisplayChange?:any;
 }
 
 class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {

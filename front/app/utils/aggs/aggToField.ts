@@ -2,7 +2,6 @@ import { propOr } from 'ramda';
 
 // aggToField
 export default val => {
-  console.log('HEY VAL', val)
   return (
     propOr(val, val, {
       average_rating: 'average rating',

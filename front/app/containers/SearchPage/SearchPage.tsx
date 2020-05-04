@@ -18,6 +18,8 @@ import SearchStudyPage from 'containers/SearchStudyPage';
 import BulkEditPage from 'containers/BulkEditPage';
 import { Query, graphql, ApolloConsumer } from 'react-apollo';
 import { ThemedButton } from '../../components/StyledComponents';
+import ProfileScoreBoard from '../ProfilePage/ProfileScoreBoard'
+import RenderReviews from '../ProfilePage/RenderReviews'
 import { History } from 'history';
 import {
   path,
@@ -293,6 +295,7 @@ interface SearchPageState {
   removeSelectAll: boolean;
   totalRecords: number;
   siteViewType: string;
+  currentDisplay: string;
 }
 
 const DEFAULT_PARAMS: SearchParams = {
@@ -313,6 +316,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     removeSelectAll: false,
     totalRecords: 0,
     siteViewType: '',
+    currentDisplay:'',
   };
 
   numberOfPages: number = 0;
@@ -506,6 +510,9 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         this.updateSearchParams(this.state.params)
       );
     }
+  };
+  handleDisplayChange = display => {
+    this.setState({ currentDisplay: display });
   };
 
   renderAggs = siteView => {
@@ -816,6 +823,33 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       </SearchContainer>
     );
   };
+  renderResults =(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)=>{
+    switch (this.state.currentDisplay) {
+
+      case 'reviews':
+        return (
+          <RenderReviews
+            reviewData={[]}
+            history={this.props.history}
+          />
+        );
+      default:
+          return (
+            <SearchPageWrapper>
+            {showFacetBar && (
+              <ThemedSidebarContainer md={2}>
+                {this.renderAggs(currentSiteView)}
+              </ThemedSidebarContainer>
+            )}
+            <ThemedMainContainer>
+              {showBreadCrumbs && this.renderCrumbs(currentSiteView)}
+              {showPresearch && this.renderPresearch(hash)}
+              {this.renderSearch()}
+            </ThemedMainContainer>
+          </SearchPageWrapper>
+          );
+    }
+  }
 
   renderCrumbs = siteView => {
     const { params, totalRecords } = this.state;
@@ -942,36 +976,25 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
               if(profile && profile.values.toString() !== this.props.email){
                 return (
                   <ThemedMainContainer>
-                  <h2>{profile && profile.values.toString()}'s Contributions</h2>
-                  <SearchPageWrapper>
-                    {showFacetBar && (
-                      <ThemedSidebarContainer md={2}>
-                        {this.renderAggs(currentSiteView)}
-                      </ThemedSidebarContainer>
-                    )}
-                    <ThemedMainContainer>
-                      {showBreadCrumbs && this.renderCrumbs(currentSiteView)}
-                      {showPresearch && this.renderPresearch(hash)}
-                      {this.renderSearch()}
-                    </ThemedMainContainer>
-                  </SearchPageWrapper>
+                  <h2 style={{marginLeft:"1em"}}>{profile && profile.values.toString()}'s Contributions</h2>
+                  <SearchContainer>
+                    <ProfileScoreBoard
+                      totalPoints={0}
+                      totalContributions={0}
+                      totalReviews={0}
+                      totalTags={'Coming Soon'}
+                      totalFavorites={0}
+                      handleDisplayChange={this.handleDisplayChange}
+                    />
+                 </SearchContainer>
+                {this.renderResults(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)}
                   </ThemedMainContainer>
                 );
 
               }
               return (
-                <SearchPageWrapper>
-                  {showFacetBar && (
-                    <ThemedSidebarContainer md={2}>
-                      {this.renderAggs(currentSiteView)}
-                    </ThemedSidebarContainer>
-                  )}
-                  <ThemedMainContainer>
-                    {showBreadCrumbs && this.renderCrumbs(currentSiteView)}
-                    {showPresearch && this.renderPresearch(hash)}
-                    {this.renderSearch()}
-                  </ThemedMainContainer>
-                </SearchPageWrapper>
+                this.renderResults(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)
+
               );
             }}
           />
