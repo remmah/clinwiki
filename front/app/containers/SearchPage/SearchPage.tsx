@@ -739,16 +739,22 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
     if (data?.provisionSearchHash?.searchHash?.short) {
       if(this.props.match.path =="/profile"){
+        console.log("PARAMS",this.props.match)
         this.props.history.push(
           `/profile?hash=${
             data!.provisionSearchHash!.searchHash!.short
           }&sv=${siteViewUrl}`
         ); return;
       }else if(this.findFilter("wiki_page_edits.email")){
+        let userId = new URLSearchParams(this.props.history.location.search).getAll(
+          'uid'
+        );
+        console.log("PARAMS", userId.toString(), this.props.match)
+
         this.props.history.push(
           `/profile/user?hash=${
             data!.provisionSearchHash!.searchHash!.short
-          }&sv=${siteViewUrl}`
+          }&sv=${siteViewUrl}&uid=${userId.toString()}`
         ); return;
       }
       this.props.history.push(
@@ -824,16 +830,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     );
   };
   renderResults =(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)=>{
-    switch (this.state.currentDisplay) {
-
-      case 'reviews':
-        return (
-          <RenderReviews
-            reviewData={[]}
-            history={this.props.history}
-          />
-        );
-      default:
           return (
             <SearchPageWrapper>
             {showFacetBar && (
@@ -848,7 +844,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
             </ThemedMainContainer>
           </SearchPageWrapper>
           );
-    }
+    
   }
 
   renderCrumbs = siteView => {
@@ -973,25 +969,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                 showFacetBar,
                 showBreadCrumbs,
               } = currentSiteView.search.config.fields;
-              if(profile && profile.values.toString() !== this.props.email){
-                return (
-                  <ThemedMainContainer>
-                  <h2 style={{marginLeft:"1em"}}>{profile && profile.values.toString()}'s Contributions</h2>
-                  <SearchContainer>
-                    <ProfileScoreBoard
-                      totalPoints={0}
-                      totalContributions={0}
-                      totalReviews={0}
-                      totalTags={'Coming Soon'}
-                      totalFavorites={0}
-                      handleDisplayChange={this.handleDisplayChange}
-                    />
-                 </SearchContainer>
-                {this.renderResults(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)}
-                  </ThemedMainContainer>
-                );
 
-              }
               return (
                 this.renderResults(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)
 
