@@ -124,9 +124,33 @@ class EditProfilePage extends React.Component<
     );
   };
   renderEditForm = () => {
+    if(this.props.user){
     return (
       <div>
-        <span onClick={() => this.toggleEditProfile()}>X</span>
+               {this.props.user.pictureUrl ? (
+            <img
+              style={{
+                borderRadius: '50%',
+                margin: '1em',
+                display: 'flex',
+                maxWidth: '5em',
+              }}
+              src={this.props.user.pictureUrl}
+              alt="profile-picture"
+            />
+          ) : (
+            <FontAwesome
+              className="fa-user"
+              name=" fa-user"
+              style={{
+                display: 'flex',
+                maxWidth: '5em',
+                fontSize:'5em'
+              }}
+              // onClick={toggleShowValue}
+            />
+          )}
+        <span style={{paddingLeft:'15px'}} onClick={() => this.toggleEditProfile()}>X</span>
 
         <SearchContainer>
           <StyledProfileLabel>First Name:</StyledProfileLabel>
@@ -184,6 +208,7 @@ class EditProfilePage extends React.Component<
         </SearchContainer>
       </div>
     );
+            }
   };
   renderProfileInfo = () => {
     console.log('User', this.props.user);
@@ -213,7 +238,7 @@ class EditProfilePage extends React.Component<
               // onClick={toggleShowValue}
             />
           )}
-          <span onClick={() => this.toggleEditProfile()}> Edit Profile</span>
+          <span style={{paddingLeft:'15px'}} onClick={() => this.toggleEditProfile()}> Edit Profile</span>
 
           <SearchContainer>
             <StyledProfileLabel>First Name:</StyledProfileLabel>
@@ -249,6 +274,8 @@ class EditProfilePage extends React.Component<
     switch (this.state.currentDisplay) {
       case 'contributions':
         return (
+          <div>
+          <h2>Contributed Studies:</h2>
           <SearchPage
             history={this.props.history}
             location={this.props.location}
@@ -258,13 +285,17 @@ class EditProfilePage extends React.Component<
             //userId={this.props.match.params.id}
             //profileParams={this.getUserParams(this.props.match.params.id)}
           />
+          </div>
         );
       case 'reviews':
         return (
+          <div>
+          <h2>Reviewed Studies:</h2>
           <RenderReviews
             reviewData={this.props.user?.reviews}
             history={this.props.history}
           />
+          </div>
         );
     }
   };

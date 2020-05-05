@@ -71,7 +71,7 @@ const MainContainer = styled(Col)`
 
   .rt-table {
   }
-  span, h2{
+   h2{
     padding-left: 15px;
   }
 `;
@@ -179,11 +179,14 @@ font-size:1.25em;
 border-bottom: solid white;
 margin: 0 1em 1em 1em;
 `;
+export const StyledProfileRanking= styled.div`
+display:flex;
+`;
 export const StyledProfileScoreValue = styled.div`
   font-size:1.25em;
 `;
 export const StyledLabelValuePair = styled.div`
-  margin-left:5%;
+  margin:auto;
   width:25%;
   text-align: center;
   cursor:pointer;
