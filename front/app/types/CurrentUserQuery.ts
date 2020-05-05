@@ -40,7 +40,7 @@ export interface CurrentUserQuery_me {
    */
   reviewCount: number;
   reviews: CurrentUserQuery_me_reviews[];
-  pictureUrl: string;
+  pictureUrl: string | null;
   contributions: number;
 }
 
