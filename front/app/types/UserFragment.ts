@@ -40,5 +40,6 @@ export interface UserFragment {
    */
   reviewCount: number;
   reviews: UserFragment_reviews[];
+  pictureUrl: string;
   contributions: number;
 }

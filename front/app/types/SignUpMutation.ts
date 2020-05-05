@@ -42,6 +42,7 @@ export interface SignUpMutation_signUp_user {
    */
   reviewCount: number;
   reviews: SignUpMutation_signUp_user_reviews[];
+  pictureUrl: string;
   contributions: number;
 }
 

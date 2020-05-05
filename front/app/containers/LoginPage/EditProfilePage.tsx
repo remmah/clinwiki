@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as FontAwesome from 'react-fontawesome';
 import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { Mutation, MutationFn } from 'react-apollo';
@@ -185,9 +186,33 @@ class EditProfilePage extends React.Component<
     );
   };
   renderProfileInfo = () => {
+    console.log('User', this.props.user);
     if (this.props.user) {
       return (
         <div>
+          {this.props.user.pictureUrl ? (
+            <img
+              style={{
+                borderRadius: '50%',
+                margin: '1em',
+                display: 'flex',
+                maxWidth: '5em',
+              }}
+              src={this.props.user.pictureUrl}
+              alt="profile-picture"
+            />
+          ) : (
+            <FontAwesome
+              className="fa-user"
+              name=" fa-user"
+              style={{
+                display: 'flex',
+                maxWidth: '5em',
+                fontSize:'5em'
+              }}
+              // onClick={toggleShowValue}
+            />
+          )}
           <span onClick={() => this.toggleEditProfile()}> Edit Profile</span>
 
           <SearchContainer>
