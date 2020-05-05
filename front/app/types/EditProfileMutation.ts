@@ -42,7 +42,7 @@ export interface EditProfileMutation_updateProfile_user {
    */
   reviewCount: number;
   reviews: EditProfileMutation_updateProfile_user_reviews[];
-  pictureUrl: string;
+  pictureUrl: string | null;
   contributions: number;
 }
 

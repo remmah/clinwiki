@@ -42,7 +42,7 @@ export interface SignInMutation_signIn_user {
    */
   reviewCount: number;
   reviews: SignInMutation_signIn_user_reviews[];
-  pictureUrl: string;
+  pictureUrl: string | null;
   contributions: number;
 }
 

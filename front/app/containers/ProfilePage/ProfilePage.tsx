@@ -12,6 +12,8 @@ import {
 } from 'components/StyledComponents';
 import ProfileScoreBoard from '../ProfilePage/ProfileScoreBoard';
 import RenderReviews from '../ProfilePage/RenderReviews';
+import { Query } from 'react-apollo';
+import { gql } from 'apollo-boost';
 
 interface ProfilePageProps {
   history: History;
@@ -21,10 +23,27 @@ interface ProfilePageProps {
 interface ProfilePageState{
   currentDisplay:string;
 }
+const USER_QUERY = gql`
+  query User($userId: Int!) {
+    user(userId: $userId) {
+      firstName
+      lastName
+      reviewCount
+      reviews {
+        nctId
+        briefTitle
+        content
+      }
+      contributions
+      pictureUrl
+    }
+  }
+`;
 class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
   state:ProfilePageState={
-    currentDisplay:'contributions'
+    currentDisplay:'contributions',
   }
+
   componentDidMount() {
     console.log('This.props', this.props);
   }
@@ -42,13 +61,13 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
   handleDisplayChange = display => {
     this.setState({ currentDisplay: display });
   };
-  renderResults=()=>{
+  renderResults=(reviews)=>{
     switch (this.state.currentDisplay) {
 
       case 'reviews':
         return (
           <RenderReviews
-            reviewData={[]}
+            reviewData={reviews}
             history={this.props.history}
           />
         );
@@ -61,27 +80,42 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
           email={this.props.match.params.id}
           profileParams={this.getUserParams(this.props.match.params.id)}
         />
+
         )
+    }
+  };
+    render() {
+      let userId = new URLSearchParams(this.props.location.search).getAll('uid').toString()
+      console.log("UID" , userId)
+      return (
+        <Query query={USER_QUERY} variables={{userId: 1}}> 
+          {({ loading, error, data }) => {
+             if (loading) return <div>Fetching</div>
+             if (error) return <div>Error</div>
+            const userData = data
+            console.log('USER data', userData)
+          return (
+            <div>
+          <ThemedMainContainer>
+          <h2 style={{marginLeft:"1em"}}>{userData.user.firstName}'s Contributions</h2>
+          <SearchContainer>
+            <ProfileScoreBoard
+              totalPoints={0}
+              totalContributions={userData.user.contributions}
+              totalReviews={userData.user.reviewCount}
+              totalTags={'Coming Soon'}
+              totalFavorites={0}
+              handleDisplayChange={this.handleDisplayChange}
+            />
+         </SearchContainer>
+           {this.renderResults(userData.user.reviews)}
+            </ThemedMainContainer>
+          </div>
+          )
+          }}
+        </Query>
+      );
+    }
   }
-}
-  render() {
-    return (
-      <ThemedMainContainer>
-      <h2 style={{marginLeft:"1em"}}>'s Contributions</h2>
-      <SearchContainer>
-        <ProfileScoreBoard
-          totalPoints={0}
-          totalContributions={0}
-          totalReviews={0}
-          totalTags={'Coming Soon'}
-          totalFavorites={0}
-          handleDisplayChange={this.handleDisplayChange}
-        />
-     </SearchContainer>
-       {this.renderResults()}
-        </ThemedMainContainer>
-    );
-  }
-}
 
 export default ProfilePage;
