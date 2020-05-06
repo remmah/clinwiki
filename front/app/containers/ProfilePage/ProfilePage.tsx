@@ -10,6 +10,7 @@ import {
   StyledProfileValue,
   StyledProfileForm,
 } from 'components/StyledComponents';
+import ThemedLoaderWrapper from '../../components/LoadingPane/LoadingPane';
 import ProfileScoreBoard from './components/ProfileScoreBoard';
 import ProfilePicture from './components/ProfilePicture';
 import ReviewsTable from './components/ReviewsTable';
@@ -83,7 +84,12 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
     return (
       <Query query={USER_QUERY} variables={{ userId: 1 }}>
         {({ loading, error, data }) => {
-          if (loading) return <div>Fetching</div>;
+          if (loading)
+            return (
+              <ThemedMainContainer>
+                <ThemedLoaderWrapper />
+              </ThemedMainContainer>
+            );
           if (error) return <div>Error</div>;
           const userData = data;
           return (
