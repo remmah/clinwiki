@@ -77,6 +77,15 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
         );
     }
   };
+  renderHeader=(user)=>{
+    switch(this.state.currentDisplay){
+      case 'contributions':
+        return <h2>{user}'s Contributed Studies</h2>
+      case 'reviews':
+        return<h2> {user}'s Reviewed Studies</h2>
+    }
+
+  }
   render() {
     let userId = new URLSearchParams(this.props.location.search)
       .getAll('uid')
@@ -96,7 +105,7 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
             <div>
               <ThemedMainContainer>
                 <ProfilePicture pictureUrl={userData.user.pictureUrl} />
-                <h2 style={{ marginLeft: '1em' }}>
+                <h2>
                   {userData.user.firstName}'s Contributions
                 </h2>
                 <SearchContainer>
@@ -109,6 +118,7 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
                     handleDisplayChange={this.handleDisplayChange}
                   />
                 </SearchContainer>
+                {this.renderHeader(userData.user.firstName)}
                 {this.renderResults(userData.user.reviews)}
               </ThemedMainContainer>
             </div>
