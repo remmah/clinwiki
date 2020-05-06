@@ -89,9 +89,9 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
   render() {
     let userId = new URLSearchParams(this.props.location.search)
       .getAll('uid')
-      .toString();
+      .toString()
     return (
-      <Query query={USER_QUERY} variables={{ userId: userId }}>
+      <Query query={USER_QUERY} variables={{ userId: parseInt(userId) }}>
         {({ loading, error, data }) => {
           if (loading)
             return (
