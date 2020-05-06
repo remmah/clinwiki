@@ -18,13 +18,9 @@ import SearchStudyPage from 'containers/SearchStudyPage';
 import BulkEditPage from 'containers/BulkEditPage';
 import { Query, graphql, ApolloConsumer } from 'react-apollo';
 import { ThemedButton } from '../../components/StyledComponents';
-import ProfileScoreBoard from '../ProfilePage/ProfileScoreBoard'
-import RenderReviews from '../ProfilePage/RenderReviews'
 import { History } from 'history';
 import {
-  path,
   map,
-  filter,
   dissoc,
   pathOr,
   prop,
@@ -280,8 +276,7 @@ interface SearchPageProps {
   site: SiteFragment;
   currentSiteView: SiteFragment_siteView;
   mutate: any;
-  email?:string;
-  getTotalContributions?:any;
+  email?: string;
 }
 
 interface SearchPageState {
@@ -295,7 +290,6 @@ interface SearchPageState {
   removeSelectAll: boolean;
   totalRecords: number;
   siteViewType: string;
-  currentDisplay: string;
 }
 
 const DEFAULT_PARAMS: SearchParams = {
@@ -316,7 +310,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     removeSelectAll: false,
     totalRecords: 0,
     siteViewType: '',
-    currentDisplay:'',
   };
 
   numberOfPages: number = 0;
@@ -352,7 +345,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   getDefaultParams = (view: SiteViewFragment, email: string | undefined) => {
     if (email) {
       const profileViewParams = preselectedFilters(view);
-      profileViewParams.aggFilters.push({ field: 'wiki_page_edits.email', values: [email] });
+      profileViewParams.aggFilters.push({
+        field: 'wiki_page_edits.email',
+        values: [email],
+      });
 
       return { ...DEFAULT_PARAMS, ...profileViewParams };
     }
@@ -511,9 +507,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       );
     }
   };
-  handleDisplayChange = display => {
-    this.setState({ currentDisplay: display });
-  };
 
   renderAggs = siteView => {
     const opened = this.state.openedAgg && this.state.openedAgg.name;
@@ -634,7 +627,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   componentDidMount() {
     let searchTerm = new URLSearchParams(this.props.location?.search || '');
 
-  
     if (searchTerm.has('q')) {
       let q = {
         key: 'AND',
@@ -714,16 +706,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       },
     });
   }
-   findFilter=(variable:string)=>{
-    let aggFilter = this.state.params?.aggFilters;
-    let response = find(propEq('field', variable ), aggFilter||[]) as {
-      field:string;
-      gte:string;
-      lte:string;
-      values:any[];
-    }|null ;
-    return response
-  }
   updateSearchParams = async params => {
     this.setState({
       ...this.state,
@@ -731,31 +713,29 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     });
     const variables = { ...this.state.params, ...params };
     const { data } = await this.props.mutate({ variables });
-
-    const siteViewUrl =
-      new URLSearchParams(this.props.history.location.search)
-        .getAll('sv')
-        .toString() || 'default';
+    const searchQueryString = new URLSearchParams(
+      this.props.history.location.search
+    );
+    const siteViewUrl = searchQueryString.getAll('sv').toString() || 'default';
+    const userId = searchQueryString.getAll('uid').toString();
 
     if (data?.provisionSearchHash?.searchHash?.short) {
-      if(this.props.match.path =="/profile"){
-        console.log("PARAMS",this.props.match)
+      if (this.props.match.path == '/profile') {
         this.props.history.push(
           `/profile?hash=${
             data!.provisionSearchHash!.searchHash!.short
           }&sv=${siteViewUrl}`
-        ); return;
-      }else if(this.findFilter("wiki_page_edits.email")){
-        let userId = new URLSearchParams(this.props.history.location.search).getAll(
-          'uid'
         );
-        console.log("PARAMS", userId.toString(), this.props.match)
+        return;
+      } else if (userId) {
+        let userId = searchQueryString.getAll('uid').toString();
 
         this.props.history.push(
           `/profile/user?hash=${
             data!.provisionSearchHash!.searchHash!.short
-          }&sv=${siteViewUrl}&uid=${userId.toString()}`
-        ); return;
+          }&sv=${siteViewUrl}&uid=${userId}`
+        );
+        return;
       }
       this.props.history.push(
         `/search?hash=${
@@ -764,7 +744,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       );
       return;
     }
-
   };
 
   getTotalResults = total => {
@@ -829,23 +808,28 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       </SearchContainer>
     );
   };
-  renderResults =(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)=>{
-          return (
-            <SearchPageWrapper>
-            {showFacetBar && (
-              <ThemedSidebarContainer md={2}>
-                {this.renderAggs(currentSiteView)}
-              </ThemedSidebarContainer>
-            )}
-            <ThemedMainContainer>
-              {showBreadCrumbs && this.renderCrumbs(currentSiteView)}
-              {showPresearch && this.renderPresearch(hash)}
-              {this.renderSearch()}
-            </ThemedMainContainer>
-          </SearchPageWrapper>
-          );
-    
-  }
+  renderResults = (
+    showFacetBar,
+    showBreadCrumbs,
+    showPresearch,
+    hash,
+    currentSiteView
+  ) => {
+    return (
+      <SearchPageWrapper>
+        {showFacetBar && (
+          <ThemedSidebarContainer md={2}>
+            {this.renderAggs(currentSiteView)}
+          </ThemedSidebarContainer>
+        )}
+        <ThemedMainContainer>
+          {showBreadCrumbs && this.renderCrumbs(currentSiteView)}
+          {showPresearch && this.renderPresearch(hash)}
+          {this.renderSearch()}
+        </ThemedMainContainer>
+      </SearchPageWrapper>
+    );
+  };
 
   renderCrumbs = siteView => {
     const { params, totalRecords } = this.state;
@@ -886,11 +870,9 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   };
 
   render() {
-    const { params, totalRecords } = this.state;
       //@ts-ignore
       if (this.props.email && !this.props.match.params.id) {
       //   this.getDefaultParams(siteView);
-      this.props.getTotalContributions(totalRecords);
       }
     const opened = this.state.openedAgg && this.state.openedAgg.name;
     const openedKind = this.state.openedAgg && this.state.openedAgg.kind;
@@ -944,7 +926,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     }
 
     const hash = this.getHashFromLocation();
-    let profile = this.findFilter("wiki_page_edits.email")
 
     return (
       <SearchParamsContext.Provider
@@ -970,9 +951,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                 showBreadCrumbs,
               } = currentSiteView.search.config.fields;
 
-              return (
-                this.renderResults(showFacetBar, showBreadCrumbs, showPresearch,hash,currentSiteView)
-
+              return this.renderResults(
+                showFacetBar,
+                showBreadCrumbs,
+                showPresearch,
+                hash,
+                currentSiteView
               );
             }}
           />

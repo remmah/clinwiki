@@ -10,8 +10,9 @@ import {
   StyledProfileValue,
   StyledProfileForm,
 } from 'components/StyledComponents';
-import ProfileScoreBoard from '../ProfilePage/ProfileScoreBoard';
-import RenderReviews from '../ProfilePage/RenderReviews';
+import ProfileScoreBoard from './components/ProfileScoreBoard';
+import ProfilePicture from './components/ProfilePicture';
+import ReviewsTable from './components/ReviewsTable';
 import { Query } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
@@ -20,8 +21,8 @@ interface ProfilePageProps {
   location: Location;
   match: any;
 }
-interface ProfilePageState{
-  currentDisplay:string;
+interface ProfilePageState {
+  currentDisplay: string;
 }
 const USER_QUERY = gql`
   query User($userId: Int!) {
@@ -40,13 +41,9 @@ const USER_QUERY = gql`
   }
 `;
 class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
-  state:ProfilePageState={
-    currentDisplay:'contributions',
-  }
-
-  componentDidMount() {
-    console.log('This.props', this.props);
-  }
+  state: ProfilePageState = {
+    currentDisplay: 'contributions',
+  };
 
   getUserParams = (userId: string) => {
     return {
@@ -61,61 +58,59 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
   handleDisplayChange = display => {
     this.setState({ currentDisplay: display });
   };
-  renderResults=(reviews)=>{
+  renderResults = reviews => {
     switch (this.state.currentDisplay) {
-
       case 'reviews':
         return (
-          <RenderReviews
-            reviewData={reviews}
-            history={this.props.history}
-          />
+          <ReviewsTable reviewData={reviews} history={this.props.history} />
         );
       case 'contributions':
-        return(
+        return (
           <SearchPage
-          history={this.props.history}
-          location={this.props.location}
-          match={this.props.match}
-          email={this.props.match.params.id}
-          profileParams={this.getUserParams(this.props.match.params.id)}
-        />
-
-        )
+            history={this.props.history}
+            location={this.props.location}
+            match={this.props.match}
+            email={this.props.match.params.id}
+            profileParams={this.getUserParams(this.props.match.params.id)}
+          />
+        );
     }
   };
-    render() {
-      let userId = new URLSearchParams(this.props.location.search).getAll('uid').toString()
-      console.log("UID" , userId)
-      return (
-        <Query query={USER_QUERY} variables={{userId: 1}}> 
-          {({ loading, error, data }) => {
-             if (loading) return <div>Fetching</div>
-             if (error) return <div>Error</div>
-            const userData = data
-            console.log('USER data', userData)
+  render() {
+    let userId = new URLSearchParams(this.props.location.search)
+      .getAll('uid')
+      .toString();
+    return (
+      <Query query={USER_QUERY} variables={{ userId: 1 }}>
+        {({ loading, error, data }) => {
+          if (loading) return <div>Fetching</div>;
+          if (error) return <div>Error</div>;
+          const userData = data;
           return (
             <div>
-          <ThemedMainContainer>
-          <h2 style={{marginLeft:"1em"}}>{userData.user.firstName}'s Contributions</h2>
-          <SearchContainer>
-            <ProfileScoreBoard
-              totalPoints={0}
-              totalContributions={userData.user.contributions}
-              totalReviews={userData.user.reviewCount}
-              totalTags={'Coming Soon'}
-              totalFavorites={0}
-              handleDisplayChange={this.handleDisplayChange}
-            />
-         </SearchContainer>
-           {this.renderResults(userData.user.reviews)}
-            </ThemedMainContainer>
-          </div>
-          )
-          }}
-        </Query>
-      );
-    }
+              <ThemedMainContainer>
+                <ProfilePicture pictureUrl={userData.user.pictureUrl} />
+                <h2 style={{ marginLeft: '1em' }}>
+                  {userData.user.firstName}'s Contributions
+                </h2>
+                <SearchContainer>
+                  <ProfileScoreBoard
+                    totalPoints={0}
+                    totalContributions={userData.user.contributions}
+                    totalReviews={userData.user.reviewCount}
+                    totalTags={'Coming Soon'}
+                    totalFavorites={0}
+                    handleDisplayChange={this.handleDisplayChange}
+                  />
+                </SearchContainer>
+                {this.renderResults(userData.user.reviews)}
+              </ThemedMainContainer>
+            </div>
+          );
+        }}
+      </Query>
+    );
   }
+}
 
 export default ProfilePage;

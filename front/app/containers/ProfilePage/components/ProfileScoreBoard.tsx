@@ -27,17 +27,16 @@ class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
   starLogo = totalContributions => {
     if (10 > totalContributions && totalContributions > 0) {
       return (
-        <span style={{display:"flex", margin:"auto"}}>
-        <ReactStars
-
-          count={1}
-          color1={'#A97142'}
-          color2={'#A97142'}
-          half={false}
-          size={25}
-          // value={}
-          //onChange={value => this.handleRatingChange(key, value)}
-        />
+        <span style={{ display: 'flex', margin: 'auto' }}>
+          <ReactStars
+            count={1}
+            color1={'#A97142'}
+            color2={'#A97142'}
+            half={false}
+            size={25}
+            // value={}
+            //onChange={value => this.handleRatingChange(key, value)}
+          />
         </span>
       );
       // return <img style={{ maxWidth: '1.25em' }} src="/star_outline.png" />;
@@ -45,29 +44,29 @@ class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
       // return <img style={{ maxWidth: '1.25em' }} src="/silver_star.png" />;
       return (
         <span>
-        <ReactStars
-          count={1}
-          color1={'#C0C0C0'}
-          color2={'#C0C0C0'}
-          half={false}
-          size={25}
-          // value={}
-          //onChange={value => this.handleRatingChange(key, value)}
-        />
+          <ReactStars
+            count={1}
+            color1={'#C0C0C0'}
+            color2={'#C0C0C0'}
+            half={false}
+            size={25}
+            // value={}
+            //onChange={value => this.handleRatingChange(key, value)}
+          />
         </span>
       );
     } else if (100 > totalContributions && totalContributions > 50) {
       return (
         <span>
-        <ReactStars
-          count={1}
-          color1={'#D4AF37'}
-          color2={'#D4AF37'}
-          half={false}
-          size={25}
-          // value={}
-          //onChange={value => this.handleRatingChange(key, value)}
-        />
+          <ReactStars
+            count={1}
+            color1={'#D4AF37'}
+            color2={'#D4AF37'}
+            half={false}
+            size={25}
+            // value={}
+            //onChange={value => this.handleRatingChange(key, value)}
+          />
         </span>
       );
     } else if (totalContributions > 100) {

@@ -18,7 +18,6 @@ class EditBlurb extends React.Component<EditBlurbProps> {
     const {
       edit: { user },
     } = this.props;
-    console.log("USER", user, this.props)
     if (!user) {
       return 'Anonymous';
     }

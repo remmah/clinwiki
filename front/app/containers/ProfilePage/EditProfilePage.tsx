@@ -11,7 +11,7 @@ import {
 import SearchPage from 'containers/SearchPage';
 import { match } from 'react-router-dom';
 import { History, Location } from 'history';
-import StyledError from './StyledError';
+import StyledError from '../LoginPage/StyledError';
 import CurrentUser from 'containers/CurrentUser';
 import { UserFragment } from 'types/UserFragment';
 import { equals, pick } from 'ramda';
@@ -22,9 +22,10 @@ import {
   StyledProfileValue,
   StyledProfileForm,
 } from 'components/StyledComponents';
-import { ThemedButton } from './StyledButton';
-import ProfileScoreBoard from '../ProfilePage/ProfileScoreBoard';
-import RenderReviews from '../ProfilePage/RenderReviews';
+import { ThemedButton } from '../LoginPage/StyledButton';
+import ProfileScoreBoard from './components/ProfileScoreBoard';
+import ProfilePicture from './components/ProfilePicture';
+import ReviewsTable from './components/ReviewsTable';
 
 interface EditProfilePageProps {
   user: UserFragment | null;
@@ -127,29 +128,7 @@ class EditProfilePage extends React.Component<
     if(this.props.user){
     return (
       <div>
-               {this.props.user.pictureUrl ? (
-            <img
-              style={{
-                borderRadius: '50%',
-                margin: '1em',
-                display: 'flex',
-                maxWidth: '5em',
-              }}
-              src={this.props.user.pictureUrl}
-              alt="profile-picture"
-            />
-          ) : (
-            <FontAwesome
-              className="fa-user"
-              name=" fa-user"
-              style={{
-                display: 'flex',
-                maxWidth: '5em',
-                fontSize:'5em'
-              }}
-              // onClick={toggleShowValue}
-            />
-          )}
+
         <span style={{paddingLeft:'15px'}} onClick={() => this.toggleEditProfile()}>X</span>
 
         <SearchContainer>
@@ -211,33 +190,10 @@ class EditProfilePage extends React.Component<
             }
   };
   renderProfileInfo = () => {
-    console.log('User', this.props.user);
     if (this.props.user) {
       return (
         <div>
-          {this.props.user.pictureUrl ? (
-            <img
-              style={{
-                borderRadius: '50%',
-                margin: '1em',
-                display: 'flex',
-                maxWidth: '5em',
-              }}
-              src={this.props.user.pictureUrl}
-              alt="profile-picture"
-            />
-          ) : (
-            <FontAwesome
-              className="fa-user"
-              name=" fa-user"
-              style={{
-                display: 'flex',
-                maxWidth: '5em',
-                fontSize:'5em'
-              }}
-              // onClick={toggleShowValue}
-            />
-          )}
+          <ProfilePicture pictureUrl={this.props.user.pictureUrl}/>
           <span style={{paddingLeft:'15px'}} onClick={() => this.toggleEditProfile()}> Edit Profile</span>
 
           <SearchContainer>
@@ -291,7 +247,7 @@ class EditProfilePage extends React.Component<
         return (
           <div>
           <h2>Reviewed Studies:</h2>
-          <RenderReviews
+          <ReviewsTable
             reviewData={this.props.user?.reviews}
             history={this.props.history}
           />
