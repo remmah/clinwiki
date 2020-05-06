@@ -91,7 +91,7 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
       .getAll('uid')
       .toString();
     return (
-      <Query query={USER_QUERY} variables={{ userId: 1 }}>
+      <Query query={USER_QUERY} variables={{ userId: userId }}>
         {({ loading, error, data }) => {
           if (loading)
             return (
