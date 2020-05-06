@@ -111,6 +111,7 @@ class EditProfilePage extends React.Component<
 
   handleEditProfile = (editProfile: EditProfileMutationFn) => () => {
     editProfile({ variables: { input: this.state.form } });
+    this.toggleEditProfile()
   };
   toggleEditProfile = () => {
     this.setState({ isEditing: !this.state.isEditing });
