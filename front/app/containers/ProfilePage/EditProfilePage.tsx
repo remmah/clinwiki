@@ -128,6 +128,8 @@ class EditProfilePage extends React.Component<
     if(this.props.user){
     return (
       <div>
+        
+        <ProfilePicture pictureUrl={this.props.user.pictureUrl}/>
 
         <span style={{paddingLeft:'15px'}} onClick={() => this.toggleEditProfile()}>X</span>
 
