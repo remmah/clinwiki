@@ -18,6 +18,7 @@ const FRAGMENT = gql`
     defaultQueryString
     roles
     reviewCount
+    rank
     reviews
     {
       content

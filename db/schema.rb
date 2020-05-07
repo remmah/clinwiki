@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_161212) do
+ActiveRecord::Schema.define(version: 2020_05_06_181422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 2020_05_04_161212) do
     t.datetime "updated_at", null: false
     t.boolean "skip_landing"
     t.text "themes", default: "{\"primaryColor\":\"#6BA5D6\",\"secondaryColor\":\"#1b2a38\",\"lightTextColor\":\"#eee\",\"secondaryTextColor\":\"#333\",\"backgroundColor\":\"#4D5863\",\"primaryAltColor\":\"#5786AD\",\"authHeaderColor\":\"#5786AD\",\"sideBarColor\":\"#4d5762\"} "
+    t.text "user_rank", default: "{\"default\":{\"gte\":0,\"lte\":25},\"bronze\":{\"gte\":26,\"lte\":50},\"silver\":{\"gte\":51,\"lte\":75},\"gold\":{\"gte\":75,\"lte\":100},\"platinum\":{\"gte\":101,\"lte\":10000000}} "
     t.index ["subdomain"], name: "index_sites_on_subdomain", unique: true
   end
 

@@ -13,6 +13,7 @@ module Types
     field :reviews, [ReviewType], null: false
     field :contributions, Integer, null: false
     field :picture_url, String, null: true
+    field :rank, String, null: true
 
     def review_count
       reviews.count
@@ -25,6 +26,14 @@ module Types
       return [] if current_user.blank?
 
       Site.with_role(:site_owner, current_user)
+    end
+
+    def rank
+      ranking = JSON.parse(context[:current_site].user_rank)
+      rank = ranking.select{|key,values|  contributions >= values["gte"] && contributions <= values["lte"]}
+      rank.to_json.to_s
+    rescue JSON::ParserError
+      "Error in parsing JSON string"
     end
 
     def editor_sites
