@@ -28,6 +28,7 @@ class ProfilePicture extends React.Component<ProfilePictureProps> {
           style={{
             display: 'flex',
             maxWidth: '5em',
+            margin: '0.2em',
             fontSize: '5em',
           }}
         />
