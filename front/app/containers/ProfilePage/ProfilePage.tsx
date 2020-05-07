@@ -10,6 +10,7 @@ import {
   StyledProfileValue,
   StyledProfileForm,
 } from 'components/StyledComponents';
+import ThemedLoaderWrapper from '../../components/LoadingPane/LoadingPane';
 import ProfileScoreBoard from './components/ProfileScoreBoard';
 import ProfilePicture from './components/ProfilePicture';
 import ReviewsTable from './components/ReviewsTable';
@@ -76,21 +77,35 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
         );
     }
   };
+  renderHeader=(user)=>{
+    switch(this.state.currentDisplay){
+      case 'contributions':
+        return <h2>{user}'s Contributed Studies</h2>
+      case 'reviews':
+        return<h2> {user}'s Reviewed Studies</h2>
+    }
+
+  }
   render() {
     let userId = new URLSearchParams(this.props.location.search)
       .getAll('uid')
-      .toString();
+      .toString()
     return (
-      <Query query={USER_QUERY} variables={{ userId: 1 }}>
+      <Query query={USER_QUERY} variables={{ userId: parseInt(userId) }}>
         {({ loading, error, data }) => {
-          if (loading) return <div>Fetching</div>;
+          if (loading)
+            return (
+              <ThemedMainContainer>
+                <ThemedLoaderWrapper />
+              </ThemedMainContainer>
+            );
           if (error) return <div>Error</div>;
           const userData = data;
           return (
             <div>
               <ThemedMainContainer>
                 <ProfilePicture pictureUrl={userData.user.pictureUrl} />
-                <h2 style={{ marginLeft: '1em' }}>
+                <h2>
                   {userData.user.firstName}'s Contributions
                 </h2>
                 <SearchContainer>
@@ -103,6 +118,7 @@ class ProfilePage extends React.Component<ProfilePageProps, ProfilePageState> {
                     handleDisplayChange={this.handleDisplayChange}
                   />
                 </SearchContainer>
+                {this.renderHeader(userData.user.firstName)}
                 {this.renderResults(userData.user.reviews)}
               </ThemedMainContainer>
             </div>
