@@ -70,7 +70,19 @@ class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
         </span>
       );
     } else if (totalContributions > 100) {
-      return 'Platinum Star';
+      return (
+        <span>
+        <ReactStars
+          count={1}
+          color1={'#E5E4E2'}
+          color2={'#E5E4E2'}
+          half={false}
+          size={25}
+          // value={}
+          //onChange={value => this.handleRatingChange(key, value)}
+        />
+      </span>
+      );
     }
   };
 
