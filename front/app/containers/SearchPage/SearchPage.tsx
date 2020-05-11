@@ -713,14 +713,13 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     });
     const variables = { ...this.state.params, ...params };
     const { data } = await this.props.mutate({ variables });
-    const searchQueryString = new URLSearchParams(
-      this.props.history.location.search
-    );
-    const siteViewUrl = searchQueryString.getAll('sv').toString() || 'default';
-    const userId = searchQueryString.getAll('uid').toString();
+    const searchQueryString = new URLSearchParams(this.props.history.location.search);
+    const siteViewUrl = searchQueryString.getAll('sv').toString() || 'default'
+    const userId = searchQueryString.getAll('uid').toString()
 
     if (data?.provisionSearchHash?.searchHash?.short) {
       if (this.props.match.path == '/profile') {
+
         this.props.history.push(
           `/profile?hash=${
             data!.provisionSearchHash!.searchHash!.short
@@ -728,14 +727,14 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         );
         return;
       } else if (userId) {
-        let userId = searchQueryString.getAll('uid').toString();
+
+        let uid = searchQueryString.getAll('uid').toString();
         let profile = this.findFilter("wiki_page_edits.email")	
         this.props.history.push(
           `/profile/user?hash=${
             data!.provisionSearchHash!.searchHash!.short
-          }&sv=${siteViewUrl}&uid=${userId}&username=${profile && profile.values.toString()}`
-        );
-        return;
+          }&sv=${siteViewUrl}&uid=${uid}&username=${profile && profile.values.toString()}`
+          ); return;
       }
       this.props.history.push(
         `/search?hash=${
