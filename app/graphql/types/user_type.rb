@@ -30,8 +30,9 @@ module Types
 
     def rank
       ranking = JSON.parse(context[:current_site].user_rank)
-      rank = ranking.select{|key,values|  contributions >= values["gte"] && contributions <= values["lte"]}
-      rank.to_json.to_s
+      rank_sort = ranking.sort_by{|rank| rank["gte"]}.reverse
+      rank = rank_sort.find{|rank| contributions >= rank["gte"]}
+      rank["rank"]
     rescue JSON::ParserError
       "Error in parsing JSON string"
     end
