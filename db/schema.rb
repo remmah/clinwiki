@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_13_182916) do
+ActiveRecord::Schema.define(version: 2020_05_22_171520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,16 +30,23 @@ ActiveRecord::Schema.define(version: 2020_05_13_182916) do
     t.integer "user_id"
   end
 
-  create_table "facility_locations", force: :cascade do |t|
-    t.string "name"
-    t.string "city"
-    t.string "state"
-    t.string "zip"
-    t.string "country"
+  create_table "facility_locations", primary_key: ["name", "city", "state", "zip", "country"], force: :cascade do |t|
+    t.string "name", null: false
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "zip", null: false
+    t.string "country", null: false
     t.float "latitude"
     t.float "longitude"
     t.string "status"
-    t.index ["name", "city", "state", "zip", "country"], name: "facility_locations_idx", unique: true
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_lists_on_user_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -51,6 +58,16 @@ ActiveRecord::Schema.define(version: 2020_05_13_182916) do
     t.string "location_type"
     t.string "partial_match"
     t.index ["name"], name: "index_locations_on_name", unique: true
+  end
+
+  create_table "reactions", force: :cascade do |t|
+    t.string "nct_id", null: false
+    t.bigint "user_id", null: false
+    t.string "reaction_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "nct_id"], name: "index_reactions_on_user_id_and_nct_id", unique: true
+    t.index ["user_id"], name: "index_reactions_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -148,6 +165,7 @@ ActiveRecord::Schema.define(version: 2020_05_13_182916) do
     t.string "last_name"
     t.string "default_query_string"
     t.json "search_result_columns"
+    t.string "provider"
     t.string "picture_url"
     t.string "reset_token_url"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -188,6 +206,7 @@ ActiveRecord::Schema.define(version: 2020_05_13_182916) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "reactions", "users"
   add_foreign_key "site_views", "sites"
   add_foreign_key "wiki_page_edits", "users"
   add_foreign_key "wiki_page_edits", "wiki_pages"

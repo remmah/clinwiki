@@ -8,7 +8,7 @@ class User < ApplicationRecord
   # has_many :feeds, dependent: :destroy
   has_many :wiki_page_edits
   has_many :wiki_pages, through: :wiki_page_edits
-
+  has_many :reactions
   def admin?
     false
   end
