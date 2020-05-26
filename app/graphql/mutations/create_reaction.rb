@@ -3,16 +3,16 @@ module Mutations
     field :reaction, Types::ReactionType, null: true
     field :errors, [String], null: true
 
-    argument :reaction_type, String, required: true
+    argument :reaction_type_id, Int, required: true
     argument :nct_id, String, required: true
 
 
     def resolve(attrs)
       reaction = Reaction.new(attrs.to_h)
-      reaction.user_id = current_user_id
+      reaction.user_id = current_user.id
       ActiveRecord::Base.transaction do
-        reaction.save!
-        { reaction: reaction, errors: nil }
+        reaction.save
+        { reaction: reaction, errors: reaction.errors.full_messages }
       end
 
     end

@@ -27,6 +27,7 @@ class Study < AactRecord # rubocop:disable Metrics/ClassLength
   has_one  :calculated_value,      foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
 
   has_many :baseline_measurements, foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
+  has_many :reactions, foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
   has_many :baseline_counts,       foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
   has_many :browse_conditions,     foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
   has_many :browse_interventions,  foreign_key: "nct_id", inverse_of: :study, dependent: :restrict_with_exception
