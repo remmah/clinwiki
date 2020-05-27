@@ -14,9 +14,31 @@ module Types
     field :contributions, Integer, null: false
     field :picture_url, String, null: true
     field :rank, String, null: true
-    
+    field :like_count, Integer, null: true
+    field :dislike_count,Integer, null: true
+    field :liked_studies,[StudyType], null:true
+    field :disliked_studies,[StudyType], null:true
+
     def review_count
       reviews.count
+    end
+
+    def like_count
+      object.reaction_kinds.where(name:"like").count
+    end
+
+    def dislike_count
+      object.reaction_kinds.where(name:"dislike").count
+    end
+
+    def liked_studies
+      reactions = object.reactions.joins(:reaction_kind).where({reaction_kinds:{name:"like"}})
+      reactions.map{|reaction| reaction.study}
+    end
+
+    def disliked_studies
+      reactions = object.reactions.joins(:reaction_kind).where({reaction_kinds:{name:"dislike"}})
+      reactions.map{|reaction| reaction.study}
     end
 
     def contributions

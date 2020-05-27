@@ -3,7 +3,7 @@ module Mutations
     field :reaction, Types::ReactionType, null: true
     field :errors, [String], null: true
 
-    argument :reaction_type_id, Int, required: true
+    argument :reaction_kind_id, Integer, required: true
     argument :nct_id, String, required: true
 
 

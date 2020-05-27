@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2020_05_22_171520) do
     t.index ["name"], name: "index_locations_on_name", unique: true
   end
 
-  create_table "reaction_types", force: :cascade do |t|
+  create_table "reaction_kinds", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -69,10 +69,10 @@ ActiveRecord::Schema.define(version: 2020_05_22_171520) do
   create_table "reactions", force: :cascade do |t|
     t.string "nct_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "reaction_type_id"
+    t.bigint "reaction_kind_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["reaction_type_id"], name: "index_reactions_on_reaction_type_id"
+    t.index ["reaction_kind_id"], name: "index_reactions_on_reaction_kind_id"
     t.index ["user_id", "nct_id"], name: "index_reactions_on_user_id_and_nct_id", unique: true
     t.index ["user_id"], name: "index_reactions_on_user_id"
   end
