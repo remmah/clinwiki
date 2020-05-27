@@ -126,6 +126,15 @@ module Types
     field :primary_completion_date, DateTimeType, null: true
     field :primary_measures, String, null: true
     field :secondary_measures, String, null: true
+    field :likes_count, Integer,null: false
+    field :dislikes_count, Integer, null:false
+
+    def likes_count
+      object.reaction_kinds.where(name:"like").count
+    end
+    def dislikes_count
+      object.reaction_kinds.where(name:"dislike").count
+    end
 
     def administrative_info
       object
