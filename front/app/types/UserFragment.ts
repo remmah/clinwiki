@@ -12,6 +12,16 @@ export interface UserFragment_reviews {
   nctId: string;
 }
 
+export interface UserFragment_likedStudies {
+  __typename: "Study";
+  nctId: string;
+  averageRating: number;
+  briefTitle: string;
+  overallStatus: string;
+  startDate: any | null;
+  completionDate: any | null;
+}
+
 export interface UserFragment {
   __typename: "User";
   /**
@@ -43,4 +53,6 @@ export interface UserFragment {
   contributions: number;
   pictureUrl: string | null;
   rank: string | null;
+  likeCount: number | null;
+  likedStudies: UserFragment_likedStudies[] | null;
 }

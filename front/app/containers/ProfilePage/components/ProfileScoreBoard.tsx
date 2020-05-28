@@ -22,6 +22,8 @@ interface ProfileScoreBoardProps {
   totalFavorites: any;
   handleDisplayChange?: any;
   rank?: any;
+  likeCount?: number | null;
+  likedStudies?: any[] | null;
 }
 
 class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
@@ -33,7 +35,7 @@ class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
 
     let color = '';
     switch (this.props.rank) {
-      case 'default':
+      case 'bronze':
         color = firstTier;
         return (
           <span style={{ display: 'flex', margin: 'auto' }}>
@@ -114,6 +116,13 @@ class ProfileScoreBoard extends React.Component<ProfileScoreBoardProps> {
               {this.props.totalReviews}
             </StyledProfileScoreValue>
             <StyledProfileScoreLabel>Reviews</StyledProfileScoreLabel>
+          </StyledLabelValuePair>
+          <StyledLabelValuePair
+            onClick={() => this.props.handleDisplayChange('likes')}>
+            <StyledProfileScoreValue>
+              {this.props.likeCount}
+            </StyledProfileScoreValue>
+            <StyledProfileScoreLabel>Likes</StyledProfileScoreLabel>
           </StyledLabelValuePair>
           <StyledLabelValuePair>
             <StyledProfileScoreValue>

@@ -26,6 +26,15 @@ const FRAGMENT = gql`
     contributions
     pictureUrl
     rank
+    likeCount
+    likedStudies{
+      nctId
+      averageRating
+      briefTitle
+      overallStatus
+      startDate
+      completionDate
+    }
   }
 `;
 
