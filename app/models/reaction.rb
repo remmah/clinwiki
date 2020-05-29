@@ -25,4 +25,7 @@ class Reaction < ApplicationRecord
     return false
    end
  end
+ def reaction_name
+   reaction_kind.name
+ end
 end

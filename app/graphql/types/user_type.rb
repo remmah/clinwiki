@@ -14,13 +14,19 @@ module Types
     field :contributions, Integer, null: false
     field :picture_url, String, null: true
     field :rank, String, null: true
-    field :like_count, Integer, null: true
-    field :dislike_count,Integer, null: true
     field :liked_studies,[StudyType], null:true
     field :disliked_studies,[StudyType], null:true
+    field :like_count, Integer, null: true
+    field :dislike_count,Integer, null: true
+    field :reactions, [ReactionType],null: true
+    field :reactions_count,[ExpressionCountType], null: true
 
     def review_count
       reviews.count
+    end
+
+    def reactions_count
+      object.reaction_kinds.group(:name).count
     end
 
     def like_count
