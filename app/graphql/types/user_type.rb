@@ -19,18 +19,17 @@ module Types
     field :like_count, Integer, null: true
     field :dislike_count,Integer, null: true
     field :reactions, [ReactionType],null: true do
-      argument :reaction_kind, String, required: false
+      argument :reaction_kind_id, Integer, required: false
       argument :limit, Integer, required: false
       argument :offset, Integer, required: false
     end
     field :reactions_count,[ExpressionCountType], null: true
 
-    def reactions(reaction_kind:"like", limit:25, offset:10)
+    def reactions(reaction_kind_id: ReactionType.find_by_name("like").id, limit:25, offset:10)
       reaction_kind = ActiveRecord::Base.sanitize_sql(reaction_kind)
       limit = ActiveRecord::Base.sanitize_sql(limit)
       offset = ActiveRecord::Base.sanitize_sql(offset)
-      object.reactions.joins(:reaction_kind).where(reaction_kinds: {name:reaction_kind}).limit(limit)
-
+      object.reactions.where(reaction_kind_id:reaction_kind_id).limit(limit)
     end
     def review_count
       reviews.count
