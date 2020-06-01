@@ -3,7 +3,7 @@ class Reaction < ApplicationRecord
   include BelongsToStudy
   belongs_to :reaction_kind
   validates :reaction_kind_id, :nct_id, :user_id, presence: true
-  validates :nct_id,  uniqueness: { scope: :user_id, message:"User has one reactions per study"}
+  validates :nct_id,  uniqueness: { scope: [:user_id,:reaction_kind_id], message:"User has one reaction of each kind per study"}
   validate :reaction_kind_exists
   validate :user_exists
 
