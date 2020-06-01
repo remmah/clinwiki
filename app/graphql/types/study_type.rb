@@ -128,6 +128,12 @@ module Types
     field :secondary_measures, String, null: true
     field :likes_count, Integer,null: false
     field :dislikes_count, Integer, null:false
+    field :reactions_count,[ExpressionCountType], null: true
+
+
+    def reactions_count
+      object.reaction_kinds.group(:name).count
+    end
 
     def likes_count
       object.reaction_kinds.where(name:"like").count
