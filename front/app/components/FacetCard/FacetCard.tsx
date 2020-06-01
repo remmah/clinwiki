@@ -341,8 +341,8 @@ class FacetCard extends React.PureComponent<FacetCardProps, FacetCardState> {
       showLoginModal,
       showAddFacet,
     } = this.state;
-
     if (addLabel) {
+      console.log(allValues);
       return (
         <CurrentUser>
           {user => (
